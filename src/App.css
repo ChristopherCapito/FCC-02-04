@@ -9,6 +9,7 @@ body, html{
 }
 
 .buttonGrid{
+  height: 66.66666%;
   display: grid;
   grid-template-columns: repeat(4,1fr);
   background: linear-gradient(#fe9491 0%, #feab61 80%);
@@ -26,9 +27,6 @@ body, html{
   justify-content: center;
 }
 
-.display{
-}
-
 .formula{
   min-height: 24px;
 }
@@ -38,6 +36,7 @@ body, html{
 }
 
 .head{
+  height: 33.3333%;
   background: linear-gradient(#f73b7a 10%, #ff5357 100%);
 }
 
@@ -69,4 +68,11 @@ body, html{
 
 .result{
   margin-top: -16px;
+}
+
+
+@media(max-width:375px){
+  .calculator{
+    height: 100%;
+  }
 }
