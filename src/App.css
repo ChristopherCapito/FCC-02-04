@@ -40,9 +40,6 @@ body, html{
   background: linear-gradient(#f73b7a 10%, #ff5357 100%);
 }
 
-.calculator{
-  height: 100%;
-}
 
 .calculatorButton{
   border-right: 1px solid #f37375;
@@ -72,11 +69,4 @@ body, html{
 
 .result{
   margin-top: -16px;
-}
-
-
-@media(max-width:359px){
-  .calculator{
-    height: 100%;
-  }
 }
