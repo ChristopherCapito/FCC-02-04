@@ -8,3 +8,6 @@ Changelog
 
 v0.1 - Inital Version
 - Basic calculations of single line expressions
+
+
+// "css": "npm run tailwind && npm run purgecss",

@@ -17,10 +17,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "css": "npm run tailwind",
-    // "css": "npm run tailwind && npm run purgecss",
     "tailwind": "tailwind build src/tailwind.src.css -c tailwind.config.js -o src/tailwind.css",
-    "purgecss": "purgecss -c purgecss.config.js -o src",
-    
+    "purgecss": "purgecss -c purgecss.config.js -o src"    
   },
   "eslintConfig": {
     "extends": "react-app"
