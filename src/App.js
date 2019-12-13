@@ -9,19 +9,22 @@ function App() {
       id: 'clear',
       additionalClass: '',
       text: 'AC',
-      key: '1'
+      key: '1',
+      value:"clear"
     },
     {
       id: 'plusminus',
       additionalClass: '',
       text: '+/-',
-      key: '2'
+      key: '2',
+      value:"negate"
     },
     {
       id: 'percent',
       additionalClass: '',
       text: '%',
-      key: '3'
+      key: '3',
+      value:"%"
     },
     {
       id: 'divide',
@@ -136,6 +139,21 @@ function App() {
     console.log(didCalc);
   };
 
+  // Abstract button into groups : functional (clear,equals,negate), numbers (0-9 and decimal), operators (+-/*%)
+
+  // const handleClick = event => {
+
+  //   if(id === "clear"){
+  //     setDisplayFormulaText("")
+  //     setDisplayResultText("")
+  //   } else if(id === "equals")
+  //     calculate()
+  //     else {
+  //       setDisplayFormulaText(displayFormulaText.concat(val))
+  //       setDisplayResultText(val)
+  //     }
+  // }
+
   const calculate = id => {
     let lastChar = displayFormulaText[displayFormulaText.length - 1];
 
@@ -187,7 +205,8 @@ function App() {
         }
         break;
       case id === 'add':
-        displayFormulaText !== '' && lastChar !== "+" &&
+        displayFormulaText !== '' &&
+          lastChar !== '+' &&
           setDisplayFormulaText(displayFormulaText.concat('+'));
         setDisplayResultText('+');
         break;
@@ -198,12 +217,14 @@ function App() {
         }
         break;
       case id === 'multiply':
-        displayFormulaText !== '' && lastChar !== "*" &&
+        displayFormulaText !== '' &&
+          lastChar !== '*' &&
           setDisplayFormulaText(displayFormulaText.concat('*'));
         setDisplayResultText('*');
         break;
       case id === 'divide':
-        displayFormulaText !== '' && lastChar !== "/"  &&
+        displayFormulaText !== '' &&
+          lastChar !== '/' &&
           setDisplayFormulaText(displayFormulaText.concat('/'));
         setDisplayResultText('/');
         break;
