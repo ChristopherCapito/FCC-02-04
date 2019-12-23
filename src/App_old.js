@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './App.css';
 import Button from './components/Button';
 import Calculator from './components/Calculator';
-import { evaluate } from 'mathjs';
 
 function App() {
   const buttons = [
@@ -15,9 +14,9 @@ function App() {
       isOperator: false
     },
     {
-      id: 'clearOne',
+      id: 'negate',
       additionalClass: '',
-      text: 'C',
+      text: '+/-',
       key: '2',
       isFunction: true,
       isOperator: false
@@ -173,82 +172,52 @@ function App() {
 
   const [displayFormulaText, setDisplayFormulaText] = useState('');
   const [displayResultText, setDisplayResultText] = useState('0');
-  const [prevResult, setPrevResult] = useState([]);
-  const [firstEntry, setFirstEntry] = useState(true);
+  const [formula, setFormula] = useState([]);
 
   const handleClick = event => {
     let obj = parseEvent(event);
-    let inputVal = `${obj.text}`;
-    let prev = `${displayFormulaText[displayFormulaText.length - 1]}`;
-    let prev2 = displayFormulaText[displayFormulaText.length - 2];
-    /**
-     * We need to divide into three groups: Functions, Operators, Numbers
-     */
-
-    //Handle functions
-    if (obj.isfunction) {
-      switch (true) {
-        case obj.text === 'AC':
-          clear();
-          break;
-        case obj.text === '=':
-          calculate();
-          break;
-        case obj.text === 'C':
-          clearOne();
-          break;
-        case obj.text === '%':
-          break;
-        default:
-          break;
-      }
-    } else {
-      //Type in the result display, only add it to formula once an operator shows up
-      if (!obj.isoperator) {
-        // First entry should remove the zero
-        if (firstEntry) {
-          if (displayResultText.match(/0/)) {
-            setDisplayResultText(inputVal);
-            setDisplayFormulaText(inputVal);
-            setFirstEntry(false);
-            return;
+    let prev = displayFormulaText[displayFormulaText.length - 1];
+    switch (true) {
+      case obj.text === 'AC':
+        clear();
+        break;
+      case obj.text === '=':
+        calculate();
+        break;
+      case obj.text === '+/-':
+        break;
+      case obj.text === '%':
+        break;
+      default:
+        //Did we enter a dot?
+        if (obj.text === '.') {
+          if (prev === '.') {
+            break;
+          }
+        } else if (obj.isoperator) {
+          if (prev) {
+            if (prev.match(/[///*+.]/)) {
+              //If the last one was an operator, replace it with the current key
+              setDisplayFormulaText(
+                displayFormulaText
+                  .substring(0, displayFormulaText.length - 1)
+                  .concat(obj.text)
+              );
+              break;
+            }
           }
         }
-        if (inputVal === '.' && displayResultText.includes('.')) return;
-        if (inputVal === '0' && prev === '0') return;
-        setDisplayFormulaText(displayFormulaText.concat(inputVal));
-        setDisplayResultText(displayResultText.concat(inputVal));
-      } else {
-        // is operator
-        if (firstEntry) {
-          if (inputVal.match(/[///*+]/) && displayResultText.match(/0/)) {
-            setFirstEntry(false);
-            return;
-          }
-        }
-
-        if (inputVal.match(/[///*+]/) && prev.match(/[///*+]/)) return;
-        setDisplayFormulaText(displayFormulaText.concat(inputVal));
-        setDisplayResultText(inputVal);
-      }
+        setDisplayFormulaText(displayFormulaText.concat(obj.text));
+        setDisplayResultText(obj.text);
     }
   };
 
   const clear = () => {
     setDisplayFormulaText('');
-    setDisplayResultText('0');
-    setFirstEntry(true);
-  };
-  const clearOne = () => {
-    setDisplayFormulaText(
-      displayFormulaText.slice(0, displayFormulaText.length - 1)
-    );
+    setDisplayResultText('');
   };
 
-  const calculate = () => {
-    setDisplayResultText(`${evaluate(displayFormulaText)}`);
-    setDisplayFormulaText(`${evaluate(displayFormulaText)}`);
-  };
+  const calculate = () => {};
 
   //Parses shit
   const parseEvent = event => {
