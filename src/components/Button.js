@@ -9,7 +9,12 @@ const Button = props => {
   id={props.id}
   className={classList}
   onClick={props.clickHandler}
+  data-text={props.text}
+  data-inputvalue={props.inputValue}
+  data-isfunction={props.isFunction}
+  data-isoperator={props.isOperator}  
   >{props.text}</button>
+  
   )
 }
 

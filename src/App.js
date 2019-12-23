@@ -10,241 +10,203 @@ function App() {
       additionalClass: '',
       text: 'AC',
       key: '1',
-      value:"clear"
+      isFunction: true,
+      isOperator: false
     },
     {
-      id: 'plusminus',
+      id: 'negate',
       additionalClass: '',
       text: '+/-',
       key: '2',
-      value:"negate"
+      isFunction: true,
+      isOperator: false
     },
     {
       id: 'percent',
       additionalClass: '',
       text: '%',
       key: '3',
-      value:"%"
+      isFunction: true,
+      isOperator: false
     },
     {
       id: 'divide',
       additionalClass: 'border-btn-right',
       text: '/',
-      key: '4'
+      key: '4',
+      isFunction: false,
+      isOperator: true
     },
     {
       id: 'seven',
       additionalClass: '',
       text: '7',
-      key: '5'
+      key: '5',
+      inputValue: '7',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'eight',
       additionalClass: '',
       text: '8',
-      key: '6'
+      key: '6',
+      inputValue: '8',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'nine',
       additionalClass: '',
       text: '9',
-      key: '7'
+      key: '7',
+      inputValue: '9',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'multiply',
       additionalClass: 'border-btn-right',
-      text: 'X',
-      key: '8'
+      text: '*',
+      key: '8',
+      isFunction: false,
+      isOperator: true
     },
     {
       id: 'four',
       additionalClass: '',
       text: '4',
-      key: '9'
+      key: '9',
+      inputValue: '4',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'five',
       additionalClass: '',
       text: '5',
-      key: '10'
+      key: '10',
+      inputValue: '5',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'six',
       additionalClass: '',
       text: '6',
-      key: '11'
+      key: '11',
+      inputValue: '6',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'subtract',
       additionalClass: 'border-btn-right',
       text: '-',
-      key: '12'
+      key: '12',
+      isFunction: false,
+      isOperator: true
     },
     {
       id: 'one',
       additionalClass: '',
       text: '1',
-      key: '13'
+      key: '13',
+      inputValue: '1',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'two',
       additionalClass: '',
       text: '2',
-      key: '14'
+      key: '14',
+      inputValue: '2',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'three',
       additionalClass: '',
       text: '3',
-      key: '15'
+      key: '15',
+      inputValue: '3',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'add',
       additionalClass: 'border-btn-right',
       text: '+',
-      key: '16'
+      key: '16',
+      isFunction: false,
+      isOperator: true
     },
     {
       id: 'zero',
       additionalClass: 'zeroButton border-btn-bottom',
       text: '0',
-      key: '17'
+      key: '17',
+      inputValue: '0',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'decimal',
       additionalClass: 'border-btn-bottom',
       text: '.',
-      key: '18'
+      key: '18',
+      inputValue: '.',
+      isFunction: false,
+      isOperator: false
     },
     {
       id: 'equals',
       additionalClass: 'border-btn-bottom border-btn-right',
       text: '=',
-      key: '19'
+      key: '19',
+      isFunction: true,
+      isOperator: false
     }
   ];
 
   const [displayFormulaText, setDisplayFormulaText] = useState('');
   const [displayResultText, setDisplayResultText] = useState('0');
-  const [didCalc, setDidCalc] = useState(false);
+  const [formula, setFormula] = useState([]);
 
+  let temp = '';
   const handleClick = event => {
-    if (didCalc === true) {
-      setDidCalc(false);
-      setDisplayFormulaText(displayResultText);
-      calculate(event.target.id);
-    } else {
-      calculate(event.target.id);
-    }
-    console.log(didCalc);
+    let obj = parseEvent(event);
+  };
+
+  const clear = () => {};
+
+  const calculate = () => {};
+
+  //Parses shit
+  const parseEvent = event => {
+    /**Event dataset is a DOMStringmap object containing only strings.
+     * We need to have it present as an object, but with the values parsed
+     * as proper datatypes. This means numbers for the numbers, and boolean
+     * for isFunction and isOperator
+     */
+
+    return Object.fromEntries(
+      Object.entries(event.target.dataset).map(([key, value]) => {
+        let arr = [];
+        if (parseInt(value)) {
+          arr.push(key, parseInt(value));
+        } else {
+          if (value === 'true') arr.push(key, true);
+          else if (value === 'false') arr.push(key, false);
+          else arr.push(key, value);
+        }
+        return arr;
+      })
+    );
   };
 
   // Abstract button into groups : functional (clear,equals,negate), numbers (0-9 and decimal), operators (+-/*%)
-
-  // const handleClick = event => {
-
-  //   if(id === "clear"){
-  //     setDisplayFormulaText("")
-  //     setDisplayResultText("")
-  //   } else if(id === "equals")
-  //     calculate()
-  //     else {
-  //       setDisplayFormulaText(displayFormulaText.concat(val))
-  //       setDisplayResultText(val)
-  //     }
-  // }
-
-  const calculate = id => {
-    let lastChar = displayFormulaText[displayFormulaText.length - 1];
-
-    switch (true) {
-      case id === 'one':
-        setDisplayFormulaText(displayFormulaText.concat('1'));
-        setDisplayResultText('1');
-        break;
-      case id === 'two':
-        setDisplayFormulaText(displayFormulaText.concat('2'));
-        setDisplayResultText('2');
-        break;
-      case id === 'three':
-        setDisplayFormulaText(displayFormulaText.concat('3'));
-        setDisplayResultText('3');
-        break;
-      case id === 'four':
-        setDisplayFormulaText(displayFormulaText.concat('4'));
-        setDisplayResultText('4');
-        break;
-      case id === 'five':
-        setDisplayFormulaText(displayFormulaText.concat('5'));
-        setDisplayResultText('5');
-        break;
-      case id === 'six':
-        setDisplayFormulaText(displayFormulaText.concat('6'));
-        setDisplayResultText('6');
-        break;
-      case id === 'seven':
-        setDisplayFormulaText(displayFormulaText.concat('7'));
-        setDisplayResultText('7');
-        break;
-      case id === 'eight':
-        setDisplayFormulaText(displayFormulaText.concat('8'));
-        setDisplayResultText('8');
-        break;
-      case id === 'nine':
-        setDisplayFormulaText(displayFormulaText.concat('9'));
-        setDisplayResultText('9');
-        break;
-      case id === 'zero':
-        setDisplayFormulaText(displayFormulaText.concat('0'));
-        setDisplayResultText('0');
-        break;
-      case id === 'decimal':
-        if (lastChar !== '.') {
-          setDisplayFormulaText(displayFormulaText.concat('.'));
-          setDisplayResultText('.');
-        }
-        break;
-      case id === 'add':
-        displayFormulaText !== '' &&
-          lastChar !== '+' &&
-          setDisplayFormulaText(displayFormulaText.concat('+'));
-        setDisplayResultText('+');
-        break;
-      case id === 'subtract':
-        if (lastChar !== '-') {
-          setDisplayFormulaText(displayFormulaText.concat('-'));
-          setDisplayResultText('-');
-        }
-        break;
-      case id === 'multiply':
-        displayFormulaText !== '' &&
-          lastChar !== '*' &&
-          setDisplayFormulaText(displayFormulaText.concat('*'));
-        setDisplayResultText('*');
-        break;
-      case id === 'divide':
-        displayFormulaText !== '' &&
-          lastChar !== '/' &&
-          setDisplayFormulaText(displayFormulaText.concat('/'));
-        setDisplayResultText('/');
-        break;
-      case id === 'equals':
-        console.log(displayFormulaText.split(/[/*\-+]/));
-        let result = eval(displayFormulaText).toString();
-        setDisplayResultText(result);
-        setDisplayFormulaText(displayFormulaText.concat(`=${result}`));
-        setDidCalc(true);
-        break;
-      case id === 'clear':
-        setDisplayResultText('0');
-        setDisplayFormulaText('');
-        break;
-      default:
-        console.log(typeof id);
-        break;
-    }
-  };
-
   const buttonComponents = buttons.map(e => {
     return (
       <Button
@@ -253,6 +215,9 @@ function App() {
         id={e.id}
         text={e.text}
         additionalClass={e.additionalClass}
+        inputValue={e.inputValue}
+        isFunction={e.isFunction}
+        isOperator={e.isOperator}
       />
     );
   });
