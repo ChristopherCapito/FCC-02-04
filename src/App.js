@@ -25,7 +25,7 @@ function App() {
     {
       id: 'percent',
       additionalClass: '',
-      text: '%',
+      text: '',
       key: '3',
       isFunction: true,
       isOperator: false
@@ -173,14 +173,13 @@ function App() {
 
   const [displayFormulaText, setDisplayFormulaText] = useState('');
   const [displayResultText, setDisplayResultText] = useState('0');
-  const [prevResult, setPrevResult] = useState([]);
   const [firstEntry, setFirstEntry] = useState(true);
 
   const handleClick = event => {
     let obj = parseEvent(event);
     let inputVal = `${obj.text}`;
     let prev = `${displayFormulaText[displayFormulaText.length - 1]}`;
-    let prev2 = displayFormulaText[displayFormulaText.length - 2];
+
     /**
      * We need to divide into three groups: Functions, Operators, Numbers
      */
@@ -226,8 +225,11 @@ function App() {
             return;
           }
         }
-
-        if (inputVal.match(/[///*+]/) && prev.match(/[///*+]/)) return;
+        // If the input is +-*/ and the previous is +-*/
+        if (inputVal.match(/[///*+]/) && prev.match(/[///*+]/)) {
+          console.log(inputVal);
+          return;
+        }
         setDisplayFormulaText(displayFormulaText.concat(inputVal));
         setDisplayResultText(inputVal);
       }
@@ -244,10 +246,36 @@ function App() {
       displayFormulaText.slice(0, displayFormulaText.length - 1)
     );
   };
-
+  const operatorReg = /(\+|-|\*|\/){2,}/;
   const calculate = () => {
-    setDisplayResultText(`${evaluate(displayFormulaText)}`);
-    setDisplayFormulaText(`${evaluate(displayFormulaText)}`);
+    //This regex finds consecutive operators. But deletion etc. doesnt work yet :/
+    let tempStr = displayFormulaText;
+    let tempOps = tempStr.match(operatorReg);
+
+    let sanitizedStr;
+
+    sanitizedStr = tempStr;
+
+    if (tempOps != null) {
+      if (tempOps[0].endsWith('-')) {
+      } else {
+        sanitizedStr = tempStr.replace(
+          operatorReg,
+          tempStr.match(operatorReg)[1]
+        );
+      }
+    }
+
+    // Some checks
+    if (displayFormulaText.match(/[/*\-+\.]$/)) {
+      setDisplayResultText('ERR');
+      setDisplayFormulaText('');
+    } else if (displayResultText === 'ERR') {
+      clear();
+    } else {
+      setDisplayResultText(`${evaluate(sanitizedStr)}`);
+      setDisplayFormulaText(`${evaluate(sanitizedStr)}`);
+    }
   };
 
   //Parses shit
